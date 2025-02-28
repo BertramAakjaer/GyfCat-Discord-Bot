@@ -68,7 +68,7 @@ async def caption_gif(gif_url: str, caption_text: str) -> Union[BytesIO, None]:
         first_frame = Image.open(BytesIO(response.content))
         
         # Calculate margins (20% of frame width for side margins)
-        side_margin = int(first_frame.width * 0.20)
+        side_margin = int(first_frame.width * 0.10)
         max_text_width = first_frame.width - (side_margin * 2)
         
         # Wrap text with new width constraint
