@@ -53,12 +53,14 @@ def main():
 
     @client.tree.command(name="to_gif", description="Convert an image or video to a GIF")
     async def to_gif(interaction: discord.Interaction, file: discord.Attachment):
-        # Add a loading message since video conversion might take time
         await interaction.response.defer()
         logger.info(f"Converting file: {file.filename}")
         
         gif_data = await file_to_gif(file.url)
-        if gif_data:
+        if isinstance(gif_data, str):
+            # Handle disabled video message
+            await interaction.followup.send(gif_data)
+        elif gif_data:
             await interaction.followup.send(file=discord.File(gif_data, filename="converted.gif"))
             logger.info(f"Successfully converted {file.filename} to GIF")
         else:
