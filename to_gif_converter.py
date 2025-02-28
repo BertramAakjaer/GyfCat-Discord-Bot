@@ -5,6 +5,9 @@ from io import BytesIO
 from PIL import Image
 from typing import Union
 import tempfile
+from logger_setup import setup_logger
+
+logger = setup_logger('gif_converter')
 
 async def is_video(url: str) -> bool:
     video_extensions = ['.mp4', '.mov', '.avi', '.webm', '.mkv']
@@ -26,6 +29,7 @@ async def file_to_gif(url: str) -> Union[BytesIO, None]:
 
         # Check if it's a video
         if await is_video(url):
+            logger.info("Processing video file")
             # Create a temporary file to store the video
             with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(url)[1]) as tmp_file:
                 tmp_file.write(response.content)
@@ -48,8 +52,10 @@ async def file_to_gif(url: str) -> Union[BytesIO, None]:
                 # Clean up temporary file
                 os.unlink(tmp_file.name)
                 
+                logger.info("Video successfully converted to GIF")
                 return gif_buffer
         else:
+            logger.info("Processing image file")
             # Handle image as before
             img = Image.open(BytesIO(response.content))
             
@@ -60,8 +66,9 @@ async def file_to_gif(url: str) -> Union[BytesIO, None]:
             img.save(gif_buffer, format='GIF')
             gif_buffer.seek(0)
             
+            logger.info("Image successfully converted to GIF")
             return gif_buffer
 
     except Exception as e:
-        print(f"Error converting to GIF: {e}")
+        logger.error(f"Error converting to GIF: {e}")
         return None

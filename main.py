@@ -3,21 +3,24 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
 from to_gif_converter import file_to_gif # Import the image_to_gif function
+from logger_setup import setup_logger
+
+logger = setup_logger('discord_bot')
 
 class Client(commands.Bot):
     async def on_ready(self):
-        print(f'Logged on as {self.user}!')
+        logger.info(f'Logged on as {self.user}!')
         
         try: 
             synced =  await self.tree.sync()
-            print(f"Synced {len(synced)} commands")
+            logger.info(f"Synced {len(synced)} commands")
     
         except Exception as e:
-            print(f"Failed to sync commands: {e}")
+            logger.error(f"Failed to sync commands: {e}")
 
 
     async def on_message(self, message):
-        print(f'Message from {message.author}: {message.content}')
+        logger.info(f'Message from {message.author}: {message.content}')
 
         if message.author == self.user:
             return
@@ -52,12 +55,15 @@ def main():
     async def to_gif(interaction: discord.Interaction, file: discord.Attachment):
         # Add a loading message since video conversion might take time
         await interaction.response.defer()
+        logger.info(f"Converting file: {file.filename}")
         
         gif_data = await file_to_gif(file.url)
         if gif_data:
             await interaction.followup.send(file=discord.File(gif_data, filename="converted.gif"))
+            logger.info(f"Successfully converted {file.filename} to GIF")
         else:
             await interaction.followup.send("Failed to convert file to GIF.")
+            logger.error(f"Failed to convert {file.filename} to GIF")
 
     client.run(token)
 
