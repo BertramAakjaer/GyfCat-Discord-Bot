@@ -3,5 +3,3 @@ python-dotenv
 imageio[ffmpeg]
 pillow
 requests
-tempfile
-typing
