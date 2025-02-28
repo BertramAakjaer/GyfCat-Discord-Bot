@@ -4,6 +4,7 @@ from discord.ext import commands
 from discord import app_commands
 from to_gif_converter import file_to_gif # Import the image_to_gif function
 from logger_setup import setup_logger
+from gif_modifier import caption_gif
 
 logger = setup_logger('discord_bot')
 
@@ -61,11 +62,30 @@ def main():
             # Handle disabled video message
             await interaction.followup.send(gif_data)
         elif gif_data:
-            await interaction.followup.send(file=discord.File(gif_data, filename="converted.gif"))
+            await interaction.followup.send(file=discord.File(gif_data, filename="converted_to.gif"))
             logger.info(f"Successfully converted {file.filename} to GIF")
         else:
             await interaction.followup.send("Failed to convert file to GIF.")
             logger.error(f"Failed to convert {file.filename} to GIF")
+
+    @client.tree.command(name="caption", description="Add a caption to a GIF")
+    async def caption(interaction: discord.Interaction, gif: discord.Attachment, text: str):
+        await interaction.response.defer()
+        logger.info(f"Captioning GIF: {gif.filename} with text: {text}")
+        
+        if not gif.filename.lower().endswith('.gif'):
+            await interaction.followup.send("Please provide a GIF file!")
+            return
+            
+        captioned_gif = await caption_gif(gif.url, text)
+        if captioned_gif:
+            await interaction.followup.send(
+                file=discord.File(captioned_gif, filename="captioned.gif")
+            )
+            logger.info(f"Successfully captioned GIF {gif.filename}")
+        else:
+            await interaction.followup.send("Failed to caption the GIF.")
+            logger.error(f"Failed to caption GIF {gif.filename}")
 
     client.run(token)
 
