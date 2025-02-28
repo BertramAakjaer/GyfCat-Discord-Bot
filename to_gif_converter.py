@@ -27,12 +27,16 @@ async def file_to_gif(url: str) -> Union[BytesIO, None]:
         response = requests.get(url, stream=True)
         response.raise_for_status()
 
+        # Create BytesIO from response content and reset position
+        content_io = BytesIO(response.content)
+        content_io.seek(0)
+
         # Check if it's a video
         if await is_video(url):
             logger.info("Processing video file")
             # Create a temporary file to store the video
             with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(url)[1]) as tmp_file:
-                tmp_file.write(response.content)
+                tmp_file.write(content_io.read())  # Use content_io instead of response.content
                 tmp_file.flush()
                 
                 # Read the video and convert to frames
@@ -57,7 +61,7 @@ async def file_to_gif(url: str) -> Union[BytesIO, None]:
         else:
             logger.info("Processing image file")
             # Handle image as before
-            img = Image.open(BytesIO(response.content))
+            img = Image.open(content_io)  # Use content_io instead of BytesIO(response.content)
             
             if img.mode != 'RGB':
                 img = img.convert('RGB')
@@ -71,4 +75,5 @@ async def file_to_gif(url: str) -> Union[BytesIO, None]:
 
     except Exception as e:
         logger.error(f"Error converting to GIF: {e}")
+        logger.exception("Full traceback:")  # This will log the full stack trace
         return None
