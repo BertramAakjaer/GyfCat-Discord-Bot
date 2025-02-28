@@ -17,7 +17,7 @@ class Client(commands.Bot):
 
 
     async def on_message(self, message):
-        #print(f'Message from {message.author}: {message.content}')
+        print(f'Message from {message.author}: {message.content}')
 
         if message.author == self.user:
             return
@@ -42,7 +42,7 @@ def main():
 
     @client.tree.command(name="ping", description="Responds with pong")
     async def ping(interaction: discord.Interaction):
-        await interaction.response.send_message("Ping ping pongerfucker !!")
+        await interaction.response.send_message("Pingilingi")
         
     @client.tree.command(name="printer", description="I will print whatever you say")
     async def printer(interaction: discord.Interaction, message: str):
