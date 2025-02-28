@@ -1,3 +1,9 @@
 .env
 /__pycache__/
-update_log.txt
+logs
+
+/logs/*.*
+!logs
+!.gitkeep
+!.git
+!.gitignore
