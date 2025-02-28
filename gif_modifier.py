@@ -73,7 +73,7 @@ async def caption_gif(gif_url: str, caption_text: str) -> Union[BytesIO, None]:
                 y_position = outer_padding
                 for i, (line, width) in enumerate(zip(lines, line_widths)):
                     x_position = (new_frame.width - width) // 2
-                    draw.text((x_position - outer_padding, y_position), line, font=font, fill='black')
+                    draw.text((x_position, y_position - outer_padding), line, font=font, fill='black')
                     y_position += line_heights[i] + line_padding
                 
                 frames.append(new_frame)
