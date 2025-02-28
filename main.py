@@ -17,13 +17,14 @@ class Client(commands.Bot):
 
 
     async def on_message(self, message):
-        print(f'Message from {message.author}: {message.content}')
-        
+        #print(f'Message from {message.author}: {message.content}')
+
         if message.author == self.user:
             return
         
-        if message.content == 'ping':
-            await message.channel.send('pong')
+        return
+        #if message.content == 'ping':
+        #    await message.channel.send('pong')
 
 
 def main():
@@ -46,6 +47,10 @@ def main():
     @client.tree.command(name="printer", description="I will print whatever you say")
     async def printer(interaction: discord.Interaction, message: str):
         await interaction.response.send_message(message)
+
+    @client.tree.command(name="image", description="I will print the image you send")
+    async def image(interaction: discord.Interaction, image: discord.Attachment):
+        await interaction.response.send_message(image.url)
 
     client.run(token)
 
