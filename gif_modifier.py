@@ -58,7 +58,7 @@ async def caption_gif(gif_url: str, caption_text: str) -> Union[BytesIO, None]:
         # Load custom font
         font_path = os.path.join(os.path.dirname(__file__), 'assets', 'fonts', 'Futura Extra Black Condensed Regular.otf')
         try:
-            font = ImageFont.truetype(font_path, size=60)
+            font = ImageFont.truetype(font_path, size=80)
             logger.info("Using custom font")
         except Exception as e:
             logger.warning(f"Could not load custom font: {e}. Using default font.")
@@ -110,7 +110,7 @@ async def caption_gif(gif_url: str, caption_text: str) -> Union[BytesIO, None]:
                 y_position = outer_padding
                 for i, (line, width) in enumerate(zip(lines, line_widths)):
                     x_position = (new_frame.width - width) // 2
-                    draw.text((x_position, y_position - outer_padding), line, font=font, fill='black')
+                    draw.text((x_position, y_position), line, font=font, fill='black')
                     y_position += line_heights[i] + line_padding
                 
                 frames.append(new_frame)
