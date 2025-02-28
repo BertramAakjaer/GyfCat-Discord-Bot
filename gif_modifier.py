@@ -28,7 +28,7 @@ async def caption_gif(gif_url: str, caption_text: str) -> Union[BytesIO, None]:
         # Load custom font
         font_path = os.path.join(os.path.dirname(__file__), 'assets', 'fonts', 'Futura Extra Black Condensed Regular.otf')
         try:
-            font = ImageFont.truetype(font_path, size=40)
+            font = ImageFont.truetype(font_path, size=80)
             logger.info("Using custom font")
         except Exception as e:
             logger.warning(f"Could not load custom font: {e}. Using default font.")
