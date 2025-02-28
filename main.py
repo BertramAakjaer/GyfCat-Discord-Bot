@@ -2,7 +2,7 @@ import discord, os
 from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
-from image_converter import image_to_gif # Import the image_to_gif function
+from to_gif_converter import file_to_gif # Import the image_to_gif function
 
 class Client(commands.Bot):
     async def on_ready(self):
@@ -48,15 +48,18 @@ def main():
     async def printer(interaction: discord.Interaction, message: str):
         await interaction.response.send_message(message)
 
-    @client.tree.command(name="to_gif", description="I will convert your image to a GIF")
-    async def to_gif(interaction: discord.Interaction, image: discord.Attachment):
-        gif_data = await image_to_gif(image.url)
+    @client.tree.command(name="to_gif", description="Convert an image or video to a GIF")
+    async def to_gif(interaction: discord.Interaction, file: discord.Attachment):
+        # Add a loading message since video conversion might take time
+        await interaction.response.defer()
+        
+        gif_data = await file_to_gif(file.url)
         if gif_data:
-            await interaction.response.send_message(file=discord.File(gif_data, filename="gamerimage69.gif"))
+            await interaction.followup.send(file=discord.File(gif_data, filename="converted.gif"))
         else:
-            await interaction.response.send_message("Failed to convert image to GIF.")
+            await interaction.followup.send("Failed to convert file to GIF.")
 
     client.run(token)
 
-if __name__ == '__main__':
+if __name__ == '__main__': 
     main()

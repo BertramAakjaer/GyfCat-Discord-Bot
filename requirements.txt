@@ -1,5 +1,7 @@
 discord.py
 python-dotenv
-imageio
+imageio[ffmpeg]
 pillow
 requests
+tempfile
+typing
