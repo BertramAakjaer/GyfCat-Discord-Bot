@@ -42,7 +42,7 @@ def main():
 
     @client.tree.command(name="ping", description="Responds with pong")
     async def ping(interaction: discord.Interaction):
-        await interaction.response.send_message("ping pong pang")
+        await interaction.response.send_message("ping pong pang pung")
         
     @client.tree.command(name="printer", description="I will print whatever you say")
     async def printer(interaction: discord.Interaction, message: str):
